@@ -5,9 +5,38 @@
 *
 **/
 
-// Faster and less space consumption solution than Solution II
-// Assuming J has no longer length than S
+// Faster and less space consuming solution than Solution II
 class Solution_I {
+    /**
+    *
+    * Iterate through each character in S, check if it exists in J, and add up the corresponding count
+    * 
+    * Time: O(max(j, s))
+    * Space: O(1)
+    *
+    **/
+    
+    public int numJewelsInStones(String J, String S) {
+        int cnt = 0; 
+        // Sanity Check
+        if (J == null || S == null || J.length() <= 0 || S.length() <= 0) {
+            return cnt;
+        }
+        
+        // Iterate through S to calculate counts
+        for (int i = 0; i < S.length(); i++){
+            if(J.contains(String.valueOf(S.charAt(i)))) {
+                cnt += 1;
+            }
+        }
+                             
+        return cnt;
+    }
+}
+
+// Faster and less space consumption solution than Solution III
+// Assuming J has no longer length than S
+class Solution_II {
     /**
     * Set a HashMap for set of Jewels, each unique letter corresponding to the 
     * count of the jewels
@@ -43,7 +72,7 @@ class Solution_I {
 }
 
 
-class Solution_II {
+class Solution_III {
     /**
     * Set a HashMap for set of Stones, each unique letter corresponding to the 
     * count of the stone
