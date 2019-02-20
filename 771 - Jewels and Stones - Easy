@@ -1,0 +1,40 @@
+
+class Solution {
+    /**
+    * Set a HashMap for set of Stones, each unique letter corresponding to the 
+    * count of the stone
+    * Iterate through each character in J, and add up the corresponding count 
+    * of the stones in the stone map.
+    * 
+    * Time: O(max(s, j))
+    * Space: O(s)
+    *
+    **/
+    
+    public int numJewelsInStones(String J, String S) {
+        int cnt = 0; 
+        // Sanity Check
+        if (J == null || S == null || J.length() <= 0 || S.length() <= 0) {
+            return cnt;
+        }
+        
+        // Set the stone map
+        Map<Character, Integer> stoneMap = new HashMap<>();
+        for(int i = 0; i < S.length(); i++){
+            if (stoneMap.containsKey(S.charAt(i))) {
+                stoneMap.put(S.charAt(i), stoneMap.get(S.charAt(i)) + 1); 
+            } else {
+               stoneMap.put(S.charAt(i), 1);
+            }
+        }
+        
+        // Iterate through J to calculate counts
+        for (int j = 0; j < J.length(); j++){
+            if(stoneMap.containsKey(J.charAt(j))) {
+                cnt += stoneMap.get(J.charAt(j));
+            }
+        }
+                             
+        return cnt;
+    }
+}
