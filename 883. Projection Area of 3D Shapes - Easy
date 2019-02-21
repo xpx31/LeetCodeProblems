@@ -7,7 +7,7 @@
   * Return the total area of all three projections.
   */
 
-class Solution {
+class Solution_I {
     /**
     *
     * For xy plane, the area = the number of occupied squres
@@ -68,5 +68,38 @@ class Solution {
 
         return area_xy + area_xz + area_yz;
         
+    }
+}
+
+class Solution_II {
+    /**
+    *
+    * For xy plane, the area = the number of occupied squres
+    * For xz plane, the area = the sum of the largest height of each row in grid
+    * For yz plane, the area = the sum of the largest height of each coloum in grid
+    * The total area is the the sum of all the areas above
+    *
+    */
+        
+    public int projectionArea(int[][] grid) {
+        int area = 0;
+        // Sanity Check
+        if (grid == null || grid.length <= 0 || grid[0].length <= 0) {
+            return 0;
+        }
+        
+        for (int i = 0; i < grid.length; i++) {
+            int area_xy = 0;
+            int area_xz = 0;
+            int area_yz = 0;
+            for (int j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] > 0) area_xy++;
+                area_xz = grid[i][j] > area_xz ? grid[i][j] : area_xz;
+                area_yz = grid[j][i] > area_yz ? grid[j][i] : area_yz;
+            }
+            area += area_xy + area_xz + area_yz;
+        }
+            
+        return area;
     }
 }
