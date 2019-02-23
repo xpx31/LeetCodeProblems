@@ -1,0 +1,46 @@
+/**
+* Given an unsorted array of integers, find the length of longest continuous increasing subsequence (subarray).
+*
+*/
+
+
+/**
+* Linearly scan from left to right, keep the longest subarray length count 
+* and a seperate varible to store the max length count
+*   Case1: if the order is increasing, 
+*           add the length count by 1
+*   Case2: if the order is non-increasing,
+*           reset the count to 1
+*
+* Time: O(n)
+* Space: O(1)
+*
+*/
+
+
+class Solution {
+    public int findLengthOfLCIS(int[] nums) {
+        // Sanity Check
+        if (nums == null || nums.length <= 0){
+            return 0;
+        }else if (nums.length == 1){
+            return 1;
+        }
+        
+        int maxCnt = 1;
+        int curCnt = 1;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] > nums[i - 1]) {
+                curCnt++;
+            } else {
+                curCnt = 1;
+            }
+            
+            if (curCnt > maxCnt){
+                maxCnt = curCnt;
+            }
+        }
+        
+        return maxCnt;
+    }
+}
