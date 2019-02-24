@@ -6,6 +6,9 @@
 * Divide x by 10 at each iteration and get the digit then multiply the digit by 10 and add the sum 
 * to the new number. Add the sign of the integer at last.
 *
+* Time: O(log n)
+* Space: O(1)
+*
 */
 
 
