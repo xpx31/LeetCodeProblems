@@ -1,0 +1,44 @@
+// Given a 32-bit signed integer, reverse digits of an integer.
+
+
+/**
+*
+* Divide x by 10 at each iteration and get the digit then multiply the digit by 10 and add the sum 
+* to the new number. Add the sign of the integer at last.
+*
+*/
+
+
+class Solution {
+   	public int reverse(int x) {
+		int newNum = 0;
+
+		while (x != 0) {
+			// Get digits
+			int digit = x % 10;
+			x /= 10;
+
+			int maxRem = 0, minRem = 0;
+			// Get the limits in compare with extrema values
+			if (newNum != 0) {
+				int maxQuo = Integer.MAX_VALUE / Math.abs(newNum);
+				int minQuo = Integer.MIN_VALUE / Math.abs(newNum);
+				if (maxQuo < 10 || minQuo > -10){
+					return 0;
+				} else {
+					maxRem = Integer.MAX_VALUE - Math.abs(newNum * 10);
+					minRem = Integer.MIN_VALUE + Math.abs(newNum * 10);
+				}
+				// Prevent overflow
+				if (digit > maxRem || digit < minRem){
+					return 0;
+				}
+			}
+
+			// Add digits
+			newNum = 10 * newNum + digit;
+		}
+
+		return newNum;
+	}
+}
