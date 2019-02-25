@@ -1,0 +1,58 @@
+/**
+* Find the nth digit of the infinite integer sequence 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...
+* 
+* Note:
+* n is positive and will fit within the range of a 32-bit signed integer (n < 231).
+*
+*
+*/
+
+
+public class NthDigit {
+	/**
+	 * Each number from 1 - 9 has only 1 digit, in total 9 digits,
+	 * Each number from 10 - 99 has 2 digits, in total 180 digits,
+	 * Each number from 100 - 999 has 3 digits, in total 2700 digits, etc.
+	 * Total # digits in range = 9 * (# of digits in a number in range) * 10^(# digits in a number in range - 1)
+	 *
+	 * Compare n with sum of total # digits in range to find the number range that nth num is located
+	 *
+	 * Time: O(log n)
+	 * Space: O(1)
+	 *
+	 */
+
+
+	public int findNthDigit(int n) {
+		int ind = 0;
+		long rangeBase = 0;
+
+		// Find the range where the nth number is located in
+		while (n > rangeBase) {
+			ind++;
+			rangeBase += 9 * ind * Math.pow(10, ind - 1);
+		}
+
+		// Return to the last base
+		rangeBase -= 9 * ind * Math.pow(10, ind - 1);
+		int cntDigit = (int)(n - rangeBase);
+		int lastBaseNum = (int)(Math.pow(10, ind - 1) - 1);
+		int addNum = ind != 0 ? cntDigit / ind : cntDigit;
+		int addDig = ind != 0 ? cntDigit % ind : 0;
+
+		// Case 1: addNum = 0, addDig = 0
+		//	return the last digit of lastBaseNum
+		// Case 2: addNum = 0, addDig > 0
+		// 	return the addDig-th digit of (lastBaseNum + 1)
+		// Case 3: addNum > 0, addDig = 0
+		//	return the last digit of (lastBaseNum + addNum)
+		// Case 4: addNum > 0, addDig > 0
+		// 	return the addDig-th digit of (lastBaseNum + addNum + 1)
+		if (addDig == 0) {
+			// last digit of (lastBaseNum + addNum)
+			return (lastBaseNum + addNum) % 10;
+		} else {
+			String targetNum = String.valueOf(lastBaseNum + addNum + 1);
+			return Integer.parseInt(String.valueOf(targetNum.charAt(addDig - 1)));
+		}
+	}
