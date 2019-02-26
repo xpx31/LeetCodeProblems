@@ -1,0 +1,78 @@
+//	You are given two non-empty linked lists representing two non-negative integers. The most significant digit comes first and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
+//
+//	You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+//
+//	Follow up:
+//	What if you cannot modify the input lists? In other words, reversing the lists is not allowed.
+//
+
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    /**
+    * If reverse list is allowed, this problem would be easy. 
+    *
+    * Use two stacks to store all the digits respectively,
+    * Construct a new linked list for the sum of the two elements from stacks 
+    * 
+    * Time: O(n)
+    * Space: O(n)
+    *
+    */
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        Deque<Integer> stack1 = new ArrayDeque<>();
+        Deque<Integer> stack2 = new ArrayDeque<>();
+        
+        // Add integers to two stacks respectively
+        while(l1 != null) {
+            stack1.push(l1.val);
+            l1 = l1.next;
+        }
+        while(l2 != null){
+            stack2.push(l2.val);
+            l2 = l2.next;
+        }
+        
+        // Add the sum to a new linked list
+        ListNode dummy = new ListNode(0);
+        ListNode cur = new ListNode(0);
+        dummy.next = cur;
+        while(!stack1.isEmpty() || !stack2.isEmpty()){
+            int s1 = 0;
+            int s2 = 0;
+            if (!stack1.isEmpty()) {
+                s1 = stack1.pop();
+            }
+            if (!stack2.isEmpty()){
+                s2 = stack2.pop();
+            }
+
+            int sum = s1 + s2 + cur.val;
+            int carry = 0;
+            if (sum >= 10) {
+                carry++;
+                sum %= 10;
+            }
+            
+            ListNode digit = new ListNode(sum);
+            digit.next = cur.next;
+            cur.val = carry;
+            cur.next = digit;
+            dummy.next = cur;
+        }
+        
+        if (cur.val == 0){
+            return cur.next;
+        } else {
+            return dummy.next;
+        }
+    }
+}
