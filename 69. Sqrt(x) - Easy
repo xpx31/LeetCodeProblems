@@ -6,18 +6,44 @@
 
 
 
-/**
-*
-* Use binary expansion to find the left and right range of the input location.
-* Use binary search to find the exact solution of the input. 
-*
-*
-* Time: O(log n)
-* Space: O(1)
-*/
-
 class Solution {
-    public int mySqrt(int x) {
+	/**
+	 *
+	 * Use binary search to find the exact solution of the input.
+	 *
+	 * Time: O(log n)
+	 * Space: O(1)
+	 *
+	 */
+
+	public int mySqrtI(int x) {
+		int left = 1;
+		int right = x;
+		while (left <= right) {
+			int mid = left + (right - left) / 2;
+			if (x / mid == mid) {
+				return mid;
+			} else if (x / mid < mid) {
+				right = mid - 1;
+			} else {
+				left = mid + 1;
+			}
+		}
+		return right;
+	}
+
+
+	/**
+	*
+	* Use binary expansion to find the left and right range of the input location.
+	* Use binary search to find the exact solution of the input. 
+	*
+	*
+	* Time: O(log n)
+	* Space: O(1)
+	*/
+	
+    	public int mySqrtII(int x) {
 		// Special Case
 		if (x == 0) {
 			return 0;
@@ -49,5 +75,5 @@ class Solution {
 			}
 		}
 		return right;
-	}
+	    }
 }
