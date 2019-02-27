@@ -3,7 +3,7 @@
 //	We define an array is non-decreasing if array[i] <= array[i + 1] holds for every i (1 <= i < n).
 
 class Solution {
-    /**
+    	/**
 	 *
 	 * Scan through the array to find the element that need to be changed to make
 	 * the array as non-decreasing and flag it as 1;
@@ -17,7 +17,10 @@ class Solution {
 	 * 		false
 	 *
 	 * Return false if flag > 1 and true otherwise
+	 * Time: O(n)
+	 * Space: O(1)
 	 */
+	 
 	public boolean checkPossibility(int[] nums) {
 		// Sanity check
 		if(nums == null) {
