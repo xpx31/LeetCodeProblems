@@ -1,0 +1,61 @@
+//	Given an array with n integers, your task is to check if it could become non-decreasing by modifying at most 1 element.
+//
+//	We define an array is non-decreasing if array[i] <= array[i + 1] holds for every i (1 <= i < n).
+
+class Solution {
+    /**
+	 *
+	 * Scan through the array to find the element that need to be changed to make
+	 * the array as non-decreasing and flag it as 1;
+	 *
+	 * Check the left and right element of the found element
+	 * 	Case 1: left <= right
+	 * 		flag++;
+	 * 	Case 2: right out of bound
+	 * 		flag++;
+	 * 	Case 3: else
+	 * 		false
+	 *
+	 * Return false if flag > 1 and true otherwise
+	 */
+	public boolean checkPossibility(int[] nums) {
+		// Sanity check
+		if(nums == null) {
+			return false;
+		}
+		if (nums.length <= 1) {
+			return true;
+		}
+
+		int flag = 0;
+
+		// Check first element
+		if(nums[0] > nums[1]){
+			flag++;
+			nums[0] = nums[1];
+		}
+
+		// Scan the array in the middle
+		for(int i = 1; i < nums.length - 2; i++){
+			if (nums[i] > nums[i + 1]){
+				flag++;
+				if (nums[i - 1] > nums[i + 1]){
+					nums[i + 1] = nums[i];
+				} else {
+					nums[i] = nums[i - 1];
+				}
+			}
+			
+			if (flag > 1){
+				return false;
+			}
+		}
+
+		// Check last element
+		if (nums[nums.length - 2] > nums[nums.length - 1]){
+			flag++;
+		}
+
+		return flag <= 1 ? true : false;
+	}
+}
