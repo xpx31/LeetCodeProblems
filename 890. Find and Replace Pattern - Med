@@ -25,8 +25,8 @@ class Solution {
     *       Case3 and 4: new word letter and repeated word letter respectively
     * Check if map is voliated, then skip the word, otherwise, add to result list. 
     *
-    * Time: O(n^2) average, O(n^3) worst
-    * Space: O(n)
+    * Time: O(nm) average, O(n^2m^2) worst
+    * Space: O(max(n,m))
     */
     public List<String> findAndReplacePattern(String[] words, String pattern) {
         Map<Character, Character> wordMap = new HashMap<>();
