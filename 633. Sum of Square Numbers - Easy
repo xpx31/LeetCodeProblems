@@ -1,0 +1,99 @@
+// Given a non-negative integer c, your task is to decide whether there're two integers a and b such that a^2 + b^2 = c.
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class judgeSquareSum {
+	/**
+	 * Use two pointers to check if the integer square sum equals to c
+	 *
+	 * Time: O(sqrt(c))
+	 * Space: O(1)
+	 *
+	 */
+	public boolean judgeSquareSum(int c){
+		int left = 0, right = (int)Math.sqrt(c);
+		while(left <= right){
+			int cur = left * left + right * right;
+			if(cur == c){
+				return true;
+			} else if (cur < c){
+				left++;
+			} else {
+				right--;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Use binary search to find the sqrt of b^2 = c - a^2
+	 * if it exists, return true, else false
+	 *
+	 * Time: O(sqrt(c) log c)
+	 * Space: O(1)
+	 *
+	 */
+	public boolean judgeSquareSumI(int c) {
+		for (long a = 0; a * a <= c; a++){
+			long b2 = c - a*a;
+			long left = 0;
+			long right = b2;
+
+			while (left <= right){
+				long mid = left + (right - left) / 2;
+				if (mid * mid == b2){
+					return true;
+				} else if(mid * mid > b2){
+					right = mid - 1;
+				} else{
+					left = mid + 1;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Use a HashSet to store b^2 needed and check if there exist a b
+	 * such that b * b == b^2
+	 *
+	 * Time: O(sqrt(c))
+	 * Space: O(c)
+	 *
+	 */
+	public boolean judgeSquareSumII(int c){
+		Set<Long> set = new HashSet<>();
+		for (long a = 0; a * a <= c; a++) {
+			if (!set.contains(c - a*a)){
+				set.add(c - a*a);
+			}
+		}
+
+		for (long b = 0; b * b <= c; b++){
+			if(set.contains(b*b)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Looping through all integer square terms and find matching ones
+	 *
+	 * Time: O(c)
+	 * Space: O(1)
+	 *
+	 */
+	public boolean judgeSquareSumIII(int c){
+		for(long a = 0; a * a <= c; a++){
+			for (long b = 0; b * b <= c - a * a; b++){
+				if (b * b == c - a*a){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}
