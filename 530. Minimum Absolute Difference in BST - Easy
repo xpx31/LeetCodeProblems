@@ -1,0 +1,45 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    /**
+    * Pass the min. difference from top to bottom, and get the global min. from bottom up
+    *
+    * Time: O(n)
+	  * Space: O(height of the tree)
+    */
+    public int getMinimumDifference(TreeNode root) {
+		return getMinDiff(root, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
+	}
+
+	private int getMinDiff(TreeNode root, int min, int max, int minDiff){
+		// Base case
+		if (root == null){
+			return minDiff;
+		}
+
+		// Check subtrees
+		int minLeftDiff = minDiff;
+		if (min >= 0){
+			minLeftDiff = root.left != null ? 
+                Math.min(root.val - root.left.val, root.val - min) : root.val - min;
+		} else {
+            minLeftDiff = root.left != null ? root.val - root.left.val : minDiff;
+        }
+		int minRightDiff = root.right != null ? 
+            Math.min(root.right.val - root.val, max - root.val) : max - root.val;
+
+		// Get min from left and right subtrees
+		int minTreeDiff = Math.min(minLeftDiff, minRightDiff);
+		minDiff = minTreeDiff < minDiff ? minTreeDiff : minDiff;
+
+		return Math.min(getMinDiff(root.left, min, root.val, minDiff),
+			getMinDiff(root.right, root.val, max, minDiff));
+	}
+}
