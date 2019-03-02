@@ -1,0 +1,36 @@
+// We define the Perfect Number is a positive integer that is equal to the sum of all its positive divisors except itself.
+//
+// Now, given an integer n, write a function that returns true when it is a perfect number and false when it is not.
+
+class Solution {
+    /*
+    * Find all divisors from 2 upto the sqrt(num), and add to the sum to check if it equals to the num
+    *
+    * Time: O(sqrt(num))
+    * Space: O(1)
+    */
+    public boolean checkPerfectNumber(int num) {
+        // Special case
+        if(num <= 1){
+            return false;
+        }
+        
+        // Find all divisors and add to the sum
+        int sum = 1;
+        for(int x = 2; x <= (int)Math.sqrt(num); x++) {
+            if (num % x == 0){
+                sum += x + num / x;
+            }
+            if (sum > num) {
+                return false;
+            }
+        }
+        
+        // Check the sum
+        if (sum == num) {
+            return true;
+        } else{
+            return false;
+        }
+    }
+}
