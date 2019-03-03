@@ -1,0 +1,67 @@
+// Given a non-empty array of integers, return the k most frequent elements.
+
+class Solution {
+    /**
+    * Use a hash map to store the number map to the frequency, and
+    * use a min heap to store the first k most frequent elements. 
+    * Compare each pair in hash map to the top of the mim heap.
+    *
+    * Assume n >= k
+    * Time: O(n log k)
+    * Space: O(n)
+    *
+    */
+    public List<Integer> topKFrequent(int[] nums, int k) {
+        if (k == 0 || nums.length == 0){
+            return new ArrayList<>();
+        }
+        
+        // Construct min heap
+        PriorityQueue<Map.Entry<Integer, Integer>> minHeap = 
+            new PriorityQueue<>(k, new Comparator<Map.Entry<Integer, Integer>>(){
+            @Override
+            public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2){
+                if (o1.getValue().equals(o2.getValue())) {
+                    return 0;
+                }
+                return o1.getValue() < o2.getValue() ? -1 : 1;
+            }
+        }) ;
+        
+        // Store frequency map - O(n)
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int e : nums){
+            if (!map.containsKey(e)){
+                map.put(e, 1);
+            } else {
+                map.put(e, map.get(e) + 1);
+            }
+        }
+        
+        // Compare each pair - O(n log k)
+        int cnt = 0;
+        for (Map.Entry<Integer, Integer> pair : map.entrySet()){
+            if (cnt < k) {
+                minHeap.offer(pair);
+            } else {
+                if (pair.getValue() > minHeap.peek().getValue()){
+                    minHeap.poll();
+                    minHeap.offer(pair);
+                }
+            }
+            cnt++;
+        }
+        
+        // Get results from min heap - O(k log k)
+        int[] resArr = new int[k];
+        for(int i = k - 1; i >= 0; i--){
+            resArr[i] = minHeap.poll().getKey();
+        }
+        List<Integer> res = new ArrayList<>();
+        for(int e : resArr){
+            res.add(e);
+        }
+        
+        return res;
+    }
+}
