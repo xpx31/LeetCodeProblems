@@ -1,0 +1,49 @@
+
+//Given a string s consists of upper/lower-case alphabets and empty space characters ' ', return the length of last word in the string.
+//
+//	If the last word does not exist, return 0.
+//
+//	Note: A word is defined as a character sequence consists of non-space characters only.
+
+
+
+public class LastWordLength {
+	/**
+	 * Change string s into a char array,
+	 * scan from the end to the first space char, and return the num of char scanned.
+	 *
+	 * Time: O(length(last word))
+	 * Space: O(1)
+	 */
+	public int lengthOfLastWord(String s) {
+		// Sanity Check
+		if(s == null || s.length() <= 0){
+			return 0;
+		}
+
+		char[] chars = s.toCharArray();
+		int i = chars.length - 1;
+		boolean spaceFound = false;
+		boolean trailSpace = true;
+
+		// Eliminate trailing spaces
+		while(trailSpace && i >= 0){
+			if(chars[i] == ' '){
+				i--;
+			} else{
+				trailSpace = false;
+			}
+		}
+
+		// Count the number of characters in the last word
+		int cnt = 0;
+		while(!spaceFound){
+			if (i - cnt < 0 || chars[i - cnt] == ' '){
+				spaceFound = true;
+			} else {
+				cnt++;
+			}
+		}
+		return cnt;
+	}
+}
