@@ -1,0 +1,31 @@
+// Implement function ToLowerCase() that has a string parameter str, and returns the same string in lowercase.
+
+public class toLowerCase {
+	/*
+	 * Change all upper case that in range of 'A' to 'Z' to corresponding 'a' to 'z'
+	 * by calcuate the relative position of upper case letter in 'A' to 'Z', and
+	 * add to 'a'.
+	 *
+	 * Time: O(n)
+	 * Space: O(n)
+	 *
+	 */
+	public String toLowerCase(String str) {
+		// Santity Check
+		if (str == null || str.length() <= 0){
+			return str;
+		}
+
+		StringBuffer sb = new StringBuffer(str);
+
+		for (int i = 0; i < str.length(); i++){
+			char c = str.charAt(i);
+			if ('A' <= str.charAt(i) && str.charAt(i) <= 'Z'){
+				c = (char)((int)'a' + (int)(str.charAt(i) - 'A'));
+			}
+			sb.setCharAt(i, c);
+		}
+
+		return sb.toString();
+	}
+}
