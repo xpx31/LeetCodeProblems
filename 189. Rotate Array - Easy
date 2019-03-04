@@ -1,0 +1,62 @@
+// Given an array, rotate the array to the right by k steps, where k is non-negative.
+
+
+public class RotateArray {
+/**
+	 * In place solution
+	 *   Store the last element in a variable, and copy each left element to the right for k % size times
+	 * Time: O((k%n)n)
+	 * Space: O(1)
+	 */
+	public void rotate(int[] nums, int k) {
+		// Sanity check
+		if (nums == null || nums.length <= 0 || k == 0){
+			return;
+		}
+
+		// Shift num of times to the right
+		int shift = k % nums.length;
+		// Shift to the right
+		while (shift > 0) {
+			int lastInt = nums[nums.length - 1];
+			for (int i = nums.length - 1; i > 0; i--){
+				nums[i] = nums[i-1];
+			}
+			nums[0] = lastInt;
+			shift--;
+		}
+	}
+
+	/**
+	 * O(n) time solution
+	 *   Store the last k % size element in a stack, and shift each number to the right k % size times,
+	 *   and store the element in the stack into the rest of the array.
+	 *
+	 * Time: O(n)
+	 * Space: O(n)
+	 */
+	public void rotateII(int[] nums, int k) {
+		// Sanity check
+		if (nums == null || nums.length <= 0 || k % nums.length <= 0){
+			return;
+		}
+
+		// Shift num of times to the right
+		int shift = k % nums.length;
+
+		// Push into stack
+		Deque<Integer> stack = new ArrayDeque<>();
+		for (int i = 0; i < shift; i++){
+			stack.push(nums[nums.length - 1 - i]);
+		}
+
+		// Shift to the right
+		for (int i = nums.length - 1; i >= shift; i--){
+			nums[i] = nums[i - shift];
+		}
+
+		// Pop into array
+		for (int i = 0; i < shift; i++){
+			nums[i] = stack.pop();
+		}
+	}
