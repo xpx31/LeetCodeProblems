@@ -1,0 +1,117 @@
+//
+//	There are N network nodes, labelled 1 to N.
+//
+//	Given times, a list of travel times as directed edges times[i] = (u, v, w), where u is the source node, v is the target node, and w is the time it takes for a signal to travel from source to target.
+//
+//	Now, we send a signal from a certain node K. How long will it take for all nodes to receive the signal? If it is impossible, return -1.
+//
+//	Note:
+//
+//	N will be in the range [1, 100].
+//	K will be in the range [1, N].
+//	The length of times will be in the range [1, 6000].
+//	All edges times[i] = (u, v, w) will have 1 <= u, v <= N and 0 <= w <= 100.
+
+
+public class NetworkDelay {
+	/**
+	 * Put each time entry into a hashmap with key as the source and value as another hashmap with key as the
+	 * target, value as the delay time.
+	 * Use Dijkstra's algorithm to find the shortest path to any node,
+	 * and use a max heap to store the max shortest path time.
+	 *
+	 * Time: O(Nn)
+	 * Space: O(N + n)
+	 *
+	 */
+	public int networkDelayTime(int[][] times, int N, int K) {
+		// Sanity check
+		if (times == null || times.length <= 0 || times[0].length <= 0){
+			return -1;
+		}
+
+		// Store the times array into hashmaps - O(N)
+		Map<Integer, Map<Integer, Integer>> nodeMap = new HashMap<>();
+		for (int[] time : times){
+			int source = time[0];
+			int target = time[1];
+			int delay = time[2];
+
+			// No source entry - Assume there is only one delay time between the two nodes
+			if (!nodeMap.containsKey(source)){
+				Map<Integer, Integer> timeMap = new HashMap<>();
+				timeMap.put(target, delay);
+				nodeMap.put(source, timeMap);
+			} else {
+				// No target entry
+				if (!nodeMap.get(source).containsKey(target)){
+					nodeMap.get(source).put(target, delay);
+				}
+			}
+		}
+
+		// No delay time from K
+		if (!nodeMap.containsKey(K)){
+			return -1;
+		}
+
+		// Find the shortest delay time between any two nodes
+		Queue<Map<Integer, Integer>> q = new LinkedList<>();
+		Queue<Integer> key = new LinkedList<>();
+		Set<Integer> visited = new HashSet<>(); // For deduplication
+		key.offer(K);
+		q.offer(nodeMap.get(K));
+		visited.add(K);
+
+		// Get all shortest delay time layer by layer - O(N)
+		while (!q.isEmpty()){
+			int size = q.size();
+			// Get the shortest time for each node in current layer
+			for (int i = 0; i < size; i++){
+				Map<Integer, Integer> neighbors = q.remove();
+				Integer lastNode = key.remove();
+
+				if (neighbors != null) {
+					// Expand the next layer nodes
+					for (Map.Entry<Integer, Integer> node : neighbors.entrySet()) {
+						// Time from K to last node + from last node to this node
+						int time = lastNode == K ? node.getValue() :
+							nodeMap.get(K).get(lastNode) + node.getValue();
+						// No time delay from K to the node
+						if (!nodeMap.get(K).containsKey(node.getKey())) {
+							nodeMap.get(K).put(node.getKey(), time);
+						} else {
+							// Update time delay to node
+							if (nodeMap.get(K).get(node.getKey()) > time) {
+								nodeMap.get(K).put(node.getKey(), time);
+								visited.remove(node.getKey());
+							}
+						}
+
+						// Generate nodes
+						if(!visited.contains(node.getKey())){
+							q.offer(nodeMap.get(node.getKey()));
+							key.offer(node.getKey());
+							visited.add(node.getKey());
+						}
+					}
+				}
+			}
+		}
+
+		// Remove delay time from K to K
+		if(nodeMap.get(K).containsKey(K)){
+			nodeMap.get(K).remove(K);
+		}
+		// Iterate through all nodes connect to K, and find the max delay
+		int maxTime = 0;
+		int numNode = 1; // Including K node
+		for (Map.Entry<Integer, Integer> node : nodeMap.get(K).entrySet()){
+			if (node.getValue() > maxTime){
+				maxTime = node.getValue();
+			}
+			numNode++;
+		}
+
+		return numNode == N ? maxTime : -1;
+	}
