@@ -1,0 +1,38 @@
+// Given an array A of non-negative integers, return an array consisting of all the even elements of A, followed by all the odd elements of A.
+// 
+// You may return any answer array that satisfies this condition.
+
+class Solution {
+    /**
+    * Use two pointers at each end to indicate even and odd number positions respectively
+    *   [0, even): all sorted even numbers
+    *   [even, odd]: need to be explored
+    *   (odd, A.length - 1]: all sorted odd numbers
+    * Time: O(n)
+    * Space: O(1)
+    */
+    public int[] sortArrayByParity(int[] A) {
+        if(A == null || A.length <= 0){
+            return new int[0];
+        }
+        
+        int even = 0;
+        int odd = A.length - 1;
+        while (even <= odd){
+            if (A[even] % 2 != 0) {
+                swap(A, even, odd);
+                odd--;
+            } else {
+                even++;
+            }
+        }
+        
+        return A;
+    }
+    
+    private void swap(int[] A, int i1, int i2){
+        int tmp = A[i1];
+        A[i1] = A[i2];
+        A[i2] = tmp;
+    }
+}
