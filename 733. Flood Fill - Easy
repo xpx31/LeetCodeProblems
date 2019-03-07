@@ -40,7 +40,45 @@ public class FloodFill {
 	 * Time: O(nm)
 	 * Space: O(nm)
 	 */
-	public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+	public int[][] floodFill(int[][] image, int sr, int sc, int newColor){
+		int oldColor = image[sr][sc];
+		if (oldColor == newColor){
+			return image;
+		}
+		image[sr][sc] = newColor;
+		floodFillHelper(image, sr, sc, oldColor, newColor);
+		return image;
+	}
+
+	private void floodFillHelper(int[][] image, int r, int c, int oldColor, int newColor){
+		// Up, Down, Left, Right
+		int[][] moves = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+		// For each direction
+		for(int i = 0; i < moves.length; i++){
+			int row = r + moves[i][0];
+			int col = c + moves[i][1];
+			// Determine Case 2
+			if (0 <= row && row < image.length && 0 <= col && col < image[0].length){
+				// Case 1
+				if (image[row][col] == oldColor){
+					image[row][col] = newColor;
+					floodFillHelper(image, row, col, oldColor, newColor);
+				}
+				// Case 0
+			}
+		}
+	}
+	
+	/**
+	 * Use DFS recursively to find if any of the 4-directionally connected cells having the same color
+	 *   Case 0: no cells has the same color - change the color of the starting cell and return
+	 *   Case 1: any cells has the same color - go to that direction and search again
+	 *   Case 2: at boundary - treat as case 0 for the cell searching for
+	 *
+	 * Time: O(nm)
+	 * Space: O(nm)
+	 */
+	public int[][] floodFillII(int[][] image, int sr, int sc, int newColor) {
 		// Given valid image, sr, sc, and newColor
 		// Sanity Check
 		int oldColor = image[sr][sc];
