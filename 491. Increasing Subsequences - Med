@@ -11,8 +11,45 @@ The given array may contain duplicates, and two equal integers should also be co
 
  */
 
-
 public class IncreasingSubsequences {
+	/**
+	 * Use DFS to print all permutations of the increasing list
+	 *   Each level represents a position of element added
+	 *   Each branch is each remaining element
+	 *
+	 * Time: O(n^2)
+	 * Space: O(n)
+	 *
+	 * @param nums
+	 * @return
+	 */
+	public List<List<Integer>> findSubsequences(int[] nums) {
+		// Santity check
+		List<Integer> list = new ArrayList<>();
+		Set<List<Integer>> res = new HashSet<>();
+		if (nums == null || nums.length <=1){
+			return new ArrayList<>(res);
+		}
+
+		findHelper(nums, list, res, 0);
+		return new ArrayList<>(res);
+	}
+
+	private void findHelper(int[] nums, List<Integer> list, Set<List<Integer>> res, int id){
+		// Base case
+		if (list.size() >= 2){
+			res.add(new ArrayList(list));
+		}
+
+		for (int i = id; i < nums.length; i++){
+			if (list.isEmpty() || nums[i] >= list.get(list.size() - 1)) {
+				list.add(nums[i]);
+				findHelper(nums, list, res, i + 1);
+				list.remove(list.size() - 1);
+			}
+		}
+	}
+
 	/**
 	 * Use DFS to print all permutations of the increasing list
 	 *   Each level represents a position of element added
@@ -24,7 +61,7 @@ public class IncreasingSubsequences {
 	 * @param nums
 	 * @return
 	 */
-	public List<List<Integer>> findSubsequences(int[] nums) {
+	public List<List<Integer>> findSubsequencesII(int[] nums) {
 		// Santity check
 		List<Integer> list = new ArrayList<>();
 		List<List<Integer>> res = new ArrayList<>();
@@ -32,11 +69,11 @@ public class IncreasingSubsequences {
 			return res;
 		}
 
-		findHelper(nums, list, res, 0);
+		findHelperII(nums, list, res, 0);
 		return res;
 	}
 
-	private void findHelper(int[] nums, List<Integer> list, List<List<Integer>> res, int id){
+	private void findHelperII(int[] nums, List<Integer> list, List<List<Integer>> res, int id){
 		// Base case
 		if (id == nums.length){
 			return;
@@ -53,7 +90,7 @@ public class IncreasingSubsequences {
 			if (list.size() >= 2 && !res.contains(list)){
 				res.add(cloneList(list));
 			}
-			findHelper(nums, list, res, i + 1);
+			findHelperII(nums, list, res, i + 1);
 			if(!list.isEmpty()){
 				list.remove(list.size() - 1);
 			}
@@ -77,7 +114,7 @@ public class IncreasingSubsequences {
 	 * Time: O(2^n)
 	 * Space: O(n)
 	 */
-	public List<List<Integer>> findSubsequencesII(int[] nums) {
+	public List<List<Integer>> findSubsequencesIII(int[] nums) {
 		// Santity check
 		List<Integer> list = new ArrayList<>();
 		List<List<Integer>> res = new ArrayList<>();
@@ -85,11 +122,11 @@ public class IncreasingSubsequences {
 			return res;
 		}
 
-		findHelperII(nums, list, res, 0);
+		findHelperIII(nums, list, res, 0);
 		return res;
 	}
 
-	private void findHelperII(int[] nums, List<Integer> list, List<List<Integer>> res, int id){
+	private void findHelperIII(int[] nums, List<Integer> list, List<List<Integer>> res, int id){
 		// Base case
 		if (id == nums.length){
 			if (list.size() >= 2 && !res.contains(list)){
@@ -102,11 +139,12 @@ public class IncreasingSubsequences {
 		if (list.isEmpty() || nums[id] >= list.get(list.size() - 1)){
 			list.add(nums[id]);
 		}
-		findHelperII(nums, list, res, id + 1);
+		findHelperIII(nums, list, res, id + 1);
 		if (!list.isEmpty()) {
 			list.remove(list.size() - 1);
 		}
 
 		// Case 1: do not add the number
-		findHelperII(nums, list, res, id + 1);
+		findHelperIII(nums, list, res, id + 1);
 	}
+}
