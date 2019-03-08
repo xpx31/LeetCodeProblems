@@ -1,0 +1,112 @@
+/*
+Given an integer array, your task is to find all the different possible increasing subsequences of the given array, and the length of an increasing subsequence should be at least 2 .
+
+Example:
+Input: [4, 6, 7, 7]
+Output: [[4, 6], [4, 7], [4, 6, 7], [4, 6, 7, 7], [6, 7], [6, 7, 7], [7,7], [4,7,7]]
+Note:
+The length of the given array will not exceed 15.
+The range of integer in the given array is [-100,100].
+The given array may contain duplicates, and two equal integers should also be considered as a special case of increasing sequence.
+
+ */
+
+
+public class IncreasingSubsequences {
+	/**
+	 * Use DFS to print all permutations of the increasing list
+	 *   Each level represents a position of element added
+	 *   Each branch is each remaining element
+	 *
+	 * Time: O(n^3)
+	 * Space: O(n)
+	 *
+	 * @param nums
+	 * @return
+	 */
+	public List<List<Integer>> findSubsequences(int[] nums) {
+		// Santity check
+		List<Integer> list = new ArrayList<>();
+		List<List<Integer>> res = new ArrayList<>();
+		if (nums == null || nums.length <=1){
+			return res;
+		}
+
+		findHelper(nums, list, res, 0);
+		return res;
+	}
+
+	private void findHelper(int[] nums, List<Integer> list, List<List<Integer>> res, int id){
+		// Base case
+		if (id == nums.length){
+			return;
+		}
+
+		for (int i = id; i < nums.length; i++){
+			// Add element to list
+			if (list.isEmpty() || nums[i] >= list.get(list.size() - 1)){
+				list.add(nums[i]);
+			} else {
+				continue;
+			}
+			// Add list to result
+			if (list.size() >= 2 && !res.contains(list)){
+				res.add(cloneList(list));
+			}
+			findHelper(nums, list, res, i + 1);
+			if(!list.isEmpty()){
+				list.remove(list.size() - 1);
+			}
+		}
+	}
+
+	private List<Integer> cloneList(List<Integer> list){
+		List<Integer> copyList = new ArrayList<>();
+		for(int x : list){
+			copyList.add(x);
+		}
+
+		return copyList;
+	}
+
+	/**
+	 * Use DFS to print all permutations of the increasing list
+	 *   Each level represents an element
+	 *   Each branch determines whether to add or not add the element
+	 *
+	 * Time: O(2^n)
+	 * Space: O(n)
+	 */
+	public List<List<Integer>> findSubsequencesII(int[] nums) {
+		// Santity check
+		List<Integer> list = new ArrayList<>();
+		List<List<Integer>> res = new ArrayList<>();
+		if (nums == null || nums.length <=1){
+			return res;
+		}
+
+		findHelperII(nums, list, res, 0);
+		return res;
+	}
+
+	private void findHelperII(int[] nums, List<Integer> list, List<List<Integer>> res, int id){
+		// Base case
+		if (id == nums.length){
+			if (list.size() >= 2 && !res.contains(list)){
+				res.add(cloneList(list));
+			}
+			return;
+		}
+
+		// Case 0: add the number
+		if (list.isEmpty() || nums[id] >= list.get(list.size() - 1)){
+			list.add(nums[id]);
+		}
+		findHelperII(nums, list, res, id + 1);
+		if (!list.isEmpty()) {
+			list.remove(list.size() - 1);
+		}
+
+		// Case 1: do not add the number
+		findHelperII(nums, list, res, id + 1);
+	}
