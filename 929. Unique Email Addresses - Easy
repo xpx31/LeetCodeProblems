@@ -1,0 +1,82 @@
+
+/*
+Every email consists of a local name and a domain name, separated by the @ sign.
+
+For example, in alice@leetcode.com, alice is the local name, and leetcode.com is the domain name.
+
+Besides lowercase letters, these emails may contain '.'s or '+'s.
+
+If you add periods ('.') between some characters in the local name part of an email address, mail sent there will be forwarded to the same address without dots in the local name.  For example, "alice.z@leetcode.com" and "alicez@leetcode.com" forward to the same email address.  (Note that this rule does not apply for domain names.)
+
+If you add a plus ('+') in the local name, everything after the first plus sign will be ignored. This allows certain emails to be filtered, for example m.y+name@email.com will be forwarded to my@email.com.  (Again, this rule does not apply for domain names.)
+
+It is possible to use both of these rules at the same time.
+
+Given a list of emails, we send one email to each address in the list.  How many different addresses actually receive mails? 
+
+ 
+
+Example 1:
+
+Input: ["test.email+alex@leetcode.com","test.e.mail+bob.cathy@leetcode.com","testemail+david@lee.tcode.com"]
+Output: 2
+Explanation: "testemail@leetcode.com" and "testemail@lee.tcode.com" actually receive mails
+ 
+
+Note:
+
+1 <= emails[i].length <= 100
+1 <= emails.length <= 100
+Each emails[i] contains exactly one '@' character.
+ */
+
+public class UniqueEmail {
+	/**
+	 * Use a pointer to find '.' in local name, and '@'
+	 * Store each unique email address in a set
+	 * return the size of the set
+	 *
+	 * Time: O(n*avg.(email length))
+	 * Space: O(n)
+	 */
+	public int numUniqueEmails(String[] emails) {
+		if (emails == null || emails.length <= 0){
+			return 0;
+		}
+
+		Set<String> uEmails = new HashSet<>();
+		for (String email : emails){
+			boolean isAtMet = false;
+			boolean isPlusMet = false;
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < email.length(); i++){
+				char c = email.charAt(i);
+				if (!isAtMet){
+					if (!isPlusMet){
+						if (c == '+'){
+							isPlusMet = true;
+						} else if (c == '@'){
+							sb.append(c);
+							isAtMet = true;
+						} else if (c != '.'){
+							sb.append(c);
+						}
+					} else {
+						if (c == '@'){
+							sb.append(c);
+							isAtMet = true;
+						}
+					}
+				} else {
+					sb.append(c);
+				}
+			}
+			String emailStr = sb.toString();
+			if (!uEmails.contains(emailStr)){
+				uEmails.add(emailStr);
+			}
+		}
+
+		return uEmails.size();
+	}
+}
