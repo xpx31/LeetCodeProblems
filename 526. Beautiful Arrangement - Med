@@ -1,0 +1,95 @@
+
+/*
+
+Suppose you have N integers from 1 to N. We define a beautiful arrangement as an array that is constructed by these N numbers successfully if one of the following is true for the ith position (1 <= i <= N) in this array:
+
+The number at the ith position is divisible by i.
+i is divisible by the number at the ith position.
+ 
+
+Now given N, how many beautiful arrangements can you construct?
+
+Example 1:
+
+Input: 2
+Output: 2
+Explanation: 
+
+The first beautiful arrangement is [1, 2]:
+
+Number at the 1st position (i=1) is 1, and 1 is divisible by i (i=1).
+
+Number at the 2nd position (i=2) is 2, and 2 is divisible by i (i=2).
+
+The second beautiful arrangement is [2, 1]:
+
+Number at the 1st position (i=1) is 2, and 2 is divisible by i (i=1).
+
+Number at the 2nd position (i=2) is 1, and i (i=2) is divisible by 1.
+ 
+
+Note:
+
+N is a positive integer and will not exceed 15.
+
+ */
+
+public class BeautifulArrangement {
+	/**
+	 * Use dfs to list all permutations of 1 to N, try each number for the contstrain
+	 * Level: Position of the number
+	 * Branch: Avalible numbers to choose from
+	 *
+	 * Time: O(N^N)
+	 * Space: O(N)
+	 */
+	public int countArrangement(int N) {
+		int arrangement = 0;
+		if (N < 1) {
+			return arrangement;
+		}
+
+		// Construct an array from 1 to N
+		int[] arr = new int[N];
+		for (int j = 0; j < N; j++){
+			arr[j] = j + 1;
+		}
+
+		// DFS
+		return validArrangement(arr, 0, 0);
+	}
+
+	private boolean isDivisible(int num, int pos) {
+		return (num % pos == 0 || pos % num == 0);
+	}
+
+	private void swap(int[] arr, int i1, int i2){
+		int tmp = arr[i1];
+		arr[i1] = arr[i2];
+		arr[i2] = tmp;
+	}
+
+	private int validArrangement(int[] arr, int index, int validCount){
+		if (index == arr.length){
+			return ++validCount;
+		}
+
+		for (int i = index; i < arr.length; i++){
+			swap(arr, i, index);
+			if(isDivisible(arr[index], index + 1)) {
+				validCount = validArrangement(arr, index + 1, validCount);
+			}
+			swap(arr, i, index);
+		}
+
+		return validCount;
+	}
+
+	public static void main(String[] args){
+		BeautifulArrangement ba = new BeautifulArrangement();
+		// 2 - 2
+		// 3 - 3
+		// 4 - 8
+		System.out.println(ba.countArrangement(3));
+	}
+}
