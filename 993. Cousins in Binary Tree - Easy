@@ -1,0 +1,101 @@
+
+
+/*
+In a binary tree, the root node is at depth 0, and children of each depth k node are at depth k+1.
+
+Two nodes of a binary tree are cousins if they have the same depth, but have different parents.
+
+We are given the root of a binary tree with unique values, and the values x and y of two different nodes in the tree.
+
+Return true if and only if the nodes corresponding to the values x and y are cousins.
+
+
+
+Example 1:
+
+
+Input: root = [1,2,3,4], x = 4, y = 3
+Output: false
+Example 2:
+
+
+Input: root = [1,2,3,null,4,null,5], x = 5, y = 4
+Output: true
+Example 3:
+
+
+
+Input: root = [1,2,3,null,4], x = 2, y = 3
+Output: false
+
+
+Note:
+
+The number of nodes in the tree will be between 2 and 100.
+Each node has a unique integer value from 1 to 100.
+
+ */
+
+public class CousinsInBinaryTree {
+	/**
+	 * Use BFS to find the two nodes, use a queue to store the nodes
+	 *   Case 0: has the same parent 
+	 *       return false
+	 *   Case 1: either one not found at current level
+	 *       continue to find 
+	 *   Case 2: found either one only at a given level
+	 *       return false
+	 *   Case 3: not found in the tree
+	 *       return false
+	 *   Case 4: found both in the same level
+	 *       return true
+	 *
+	 * Time: O(n)
+	 * Space: O(n)
+	 *
+	 */
+	public boolean isCousins(TreeNode root, int x, int y) {
+		if (root == null || root.left == null || root.right == null) {
+			return false;
+		}
+
+		Queue<TreeNode> q = new LinkedList<>();
+		q.offer(root);
+		while(!q.isEmpty()){
+			int size = q.size();
+			boolean isX = false;
+			boolean isY = false;
+			// At Each Level
+			for (int i = 0; i < size; i++){
+				TreeNode node = q.remove();
+
+				// Case 0
+				if (node.left != null && node.right != null &&
+					(node.left.value == x && node.right.value == y ||
+						node.left.value == y && node.right.value == x)){
+					return false;
+				}
+
+				if (node.left != null) {
+					isX = isX ? isX : node.left.value == x;
+					isY = isY ? isY : node.left.value == y;
+					q.offer(node.left);
+				}
+				if (node.right != null) {
+					isX = isX ? isX : node.right.value == x;
+					isY = isY ? isY : node.right.value == y;
+					q.offer(node.right);
+				}
+			}
+
+			if (isX && isY){ // Case 4
+				return true;
+			} else if (isX || isY) { // Case 2
+				return false;
+			}
+		}
+
+		// Case 3
+		return false;
+	}
+}
