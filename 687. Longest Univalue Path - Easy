@@ -1,0 +1,81 @@
+
+/**
+ * Given a binary tree, find the length of the longest path where each node in the path has the same value. This path may or may not pass through the root.
+ *
+ * Note: The length of path between two nodes is represented by the number of edges between them.
+ *
+ * Example 1:
+ *
+ * Input:
+ *
+ *               5
+ *              / \
+ *             4   5
+ *            / \   \
+ *           1   1   5
+ * Output:
+ *
+ * 2
+ * Example 2:
+ *
+ * Input:
+ *
+ *               1
+ *              / \
+ *             4   5
+ *            / \   \
+ *           4   4   5
+ * Output:
+ *
+ * 2
+ * Note: The given binary tree has not more than 10000 nodes. The height of the tree is not more than 1000.
+ *
+ */
+public class LongestUnivaluePath {
+	/**
+	 * Use DFS to pass back the length of the univalue path going through a node
+	 *   Case 0: root is differnt than either child
+	 *       return 0
+	 *   Case 1: root has the same value as one of the children
+	 *       return path length value + 1
+	 *   Case 2: root has the same value as both children
+	 *       return the longer path + 1
+	 *       
+	 * Time: O(n)
+	 * Space: O(1)
+	 */
+	public int longestUnivaluePath(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		int[] res = {0};
+		helper(root, res);
+		return res[0];
+	}
+
+	private int helper(TreeNode node, int[] res){
+		// Base case
+		if (node == null) {
+			return 0;
+		}
+
+		// Get the length of chilren path length
+		int leftLen = helper(node.left, res);
+		int rightLen = helper(node.right, res);
+		int leftMax = 0;
+		int rightMax = 0;
+
+		// Determine the path length going through the node
+		if (node.left != null && node.left.value == node.value) {
+			leftMax = leftLen + 1;
+		}
+		if (node.right != null && node.right.value == node.value) {
+			rightMax = rightLen + 1;
+		}
+
+		// Store the maximum length to result
+		res[0] = Math.max(res[0], leftMax + rightMax);
+		// Return the longer length going through the node
+		return Math.max(leftMax, rightMax);
+	}
+}
