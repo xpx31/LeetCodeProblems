@@ -1,0 +1,85 @@
+
+/*
+In a 2D grid of 0s and 1s, we change at most one 0 to a 1.
+
+After, what is the size of the largest island? (An island is a 4-directionally connected group of 1s).
+
+Example 1:
+
+Input: [[1, 0], [0, 1]]
+Output: 3
+Explanation: Change one 0 to 1 and connect two 1s, then we get an island with area = 3.
+Example 2:
+
+Input: [[1, 1], [1, 0]]
+Output: 4
+Explanation: Change the 0 to 1 and make the island bigger, only one island with area = 4.
+Example 3:
+
+Input: [[1, 1], [1, 1]]
+Output: 4
+Explanation: Can't change any 0 to 1, only one island with area = 4.
+ 
+
+Notes:
+
+1 <= grid.length = grid[0].length <= 50.
+0 <= grid[i][j] <= 1.
+ */
+public class MakingALargeIsland {
+	/**
+	 * Use DFS to check the area of 1's for each change of 0 to 1
+	 * Case 0: no 0's
+	 *   return the grid area
+	 * Case 1: 0 is not connected to any 1's
+	 *   skip
+	 * Case 2: 0 has at least one connection with 1
+	 *   change it to 1, and start DFS to find the area of 1's
+	 *   record the max
+	 *   change it back to 0
+	 *
+	 * Time: O(n^3)
+	 * Space: O(n)
+	 */
+	public int largestIsland(int[][] grid) {
+		if (grid == null){
+			return 0;
+		}
+
+		int maxZeroArea = 0;
+		int oneArea = 0;
+		boolean containsZero = false;
+		for (int i = 0; i < grid.length; i++){
+			for (int j = 0; j < grid[0].length; j++){
+				// Case 0
+				if (grid[i][j] == 1){
+					oneArea++;
+				} else {
+					// Case 1 & 2
+					containsZero = true;
+					grid[i][j] = 1;
+					boolean[][] visited = new boolean[grid.length][grid[0].length];
+					maxZeroArea = Math.max(largestIslandHelper(grid, visited, 0, i, j), maxZeroArea);
+					grid[i][j] = 0;
+				}
+			}
+		}
+		return containsZero ? maxZeroArea : oneArea;
+	}
+
+	private int largestIslandHelper(int[][] grid, boolean[][] visited, int area, int i, int j){
+		if (0 > i || i >= grid.length || 0 > j || j >= grid[0].length || grid[i][j] == 0 || visited[i][j]) {
+			return 0;
+		}
+
+		// DFS
+		visited[i][j] = true;
+		int[][] moves = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+		int areaAdded = 0;
+		for (int k = 0; k < moves.length; k++){
+			areaAdded += largestIslandHelper(grid, visited, area, i + moves[k][0], j + moves[k][1]);
+		}
+
+		return area + areaAdded + 1;
+	}
+}
