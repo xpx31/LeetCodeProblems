@@ -1,0 +1,98 @@
+
+/*
+*** 313. Super Ugly Number - Med
+Write a program to find the nth super ugly number.
+
+Super ugly numbers are positive numbers whose all prime factors are in the given prime list primes of size k.
+
+Example:
+
+Input: n = 12, primes = [2,7,13,19]
+Output: 32
+Explanation: [1,2,4,7,8,13,14,16,19,26,28,32] is the sequence of the first 12
+             super ugly numbers given primes = [2,7,13,19] of size 4.
+Note:
+
+1 is a super ugly number for any given primes.
+The given numbers in primes are in ascending order.
+0 < k ≤ 100, 0 < n ≤ 106, 0 < primes[i] < 1000.
+The nth super ugly number is guaranteed to fit in a 32-bit signed integer.
+ */
+
+public class SupperUglyNumber {
+	/**
+	 * Use an array to store all the ugly numbers,
+	 * and another to store the base multiplier index for each prime number,
+	 * and another to store the value of the min. values of
+	 * 	the product of each prime number and base multiplier.
+	 *
+	 * 	Time: O(np)
+	 * 	Space: O(n)
+	 *
+	 * @param n
+	 * @param primes
+	 * @return
+	 */
+	public int nthSuperUglyNumber(int n, int[] primes) {
+		if (n <= 0 || primes == null) {
+			return 0;
+		}
+		int[] ugly = new int[n];
+		int[] base = new int[primes.length];
+		int[] value = new int[primes.length];
+		// Skip base multiplier of 0, which is the 0th power of all numbers
+		Arrays.fill(value, 1);
+
+		int next = 1;
+		for (int i = 0; i < n; i++){
+			ugly[i] = next;
+
+			next = Integer.MAX_VALUE;
+			for (int j = 0; j < primes.length; j++) {
+				// Deduplication, and update the base multiplier for each prime number
+				if (value[j] == ugly[i]) {
+					value[j] = ugly[base[j]++] * primes[j];
+				}
+				next = Math.min(next, value[j]);
+			}
+		}
+
+		return ugly[n - 1];
+	}
+
+		/**
+		 * Use a min heap to store all the products, and hash set for deduplication
+		 * Multiply each number in primes with the smallest number in the heap until the nth number is obtained
+		 *
+		 * Time: O(np log n)
+		 * Space: O(n)
+		 */
+	public int nthSuperUglyNumberII(int n, int[] primes) {
+		if(n <= 0 || primes == null) {
+			return 0;
+		}
+
+		PriorityQueue<Integer> minHeap = new PriorityQueue<>(n);
+		Set<Integer> obtained = new HashSet<>();
+		minHeap.offer(1);
+		obtained.add(1);
+		int cnt = 1;
+
+		// np log n
+		while (cnt < n) {
+			int num = minHeap.poll(); // log n
+
+			for (int prime : primes) { // p log n
+				int prod = num * prime;
+				if (!obtained.contains(prod)){
+					minHeap.offer(prod); // log n
+					obtained.add(prod);
+					continue;
+				}
+			}
+			cnt++;
+		}
+
+		return minHeap.peek();
+	}
+}
