@@ -34,13 +34,41 @@ Note:
  */
 public class reorderedPowerOf2 {
 	/**
+	 * Compare the count of each digit of power of 2 with the digits of the input number
+	 * If they are the same, return true
+	 * Otherwise return false
+	 *
+	 * Time: O(log^2 N)
+	 * Space: O(log N)
+	 */
+	public boolean reorderedPowerOf2(int N) {
+		int[] num = count(N);
+		for(int i = 0; i < 31; i++){
+			if (Arrays.equals(num, count(1 << i))){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private int[] count(int N){
+		// Count of each digit
+		int[] res = new int[10];
+		while (N > 0) {
+			res[N % 10]++;
+			N /= 10;
+		}
+		return res;
+	}
+	
+	/**
 	 * Use a int array to store all the digits of N,
 	 * exmaine all permutations of the int array, and check if the number is of a power of 2
 	 *
 	 * Time: O(digits!)
 	 * Space: O(digits)
 	 */
-	public boolean reorderedPowerOf2(int N) {
+	public boolean reorderedPowerOf2II(int N) {
 		int d = 0;
 		int n = N;
 		while (n != 0) {
