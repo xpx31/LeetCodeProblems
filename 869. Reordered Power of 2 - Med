@@ -1,0 +1,107 @@
+
+/*
+Starting with a positive integer N, we reorder the digits in any order (including the original order) such that the leading digit is not zero.
+
+Return true if and only if we can do this in a way such that the resulting number is a power of 2.
+
+
+
+Example 1:
+
+Input: 1
+Output: true
+Example 2:
+
+Input: 10
+Output: false
+Example 3:
+
+Input: 16
+Output: true
+Example 4:
+
+Input: 24
+Output: false
+Example 5:
+
+Input: 46
+Output: true
+
+
+Note:
+
+1 <= N <= 10^9
+ */
+public class reorderedPowerOf2 {
+	/**
+	 * Use a int array to store all the digits of N,
+	 * exmaine all permutations of the int array, and check if the number is of a power of 2
+	 *
+	 * Time: O(digits!)
+	 * Space: O(digits)
+	 */
+	public boolean reorderedPowerOf2(int N) {
+		int d = 0;
+		int n = N;
+		while (n != 0) {
+			n /= 10;
+			d++;
+		}
+
+		int[] num = new int[d];
+		for (int i = d - 1; i >= 0; i--){
+			num[i] = N % 10;
+			N /= 10;
+		}
+		return helper(num, 0);
+	}
+
+	private boolean helper(int[] num, int id){
+		if (id == num.length){
+			return isPowOf2(constructNum(num));
+		}
+
+		for (int i = id; i < num.length; i++){
+			if (num[0] != 0){
+				swap(num, i, id);
+				boolean res = helper(num, id + 1);
+				if (res) {
+					return true;
+				}
+				swap(num, i, id);
+			}
+		}
+		return false;
+	}
+
+	private void swap(int[] num, int i, int j){
+		int t = num[i];
+		num[i] = num[j];
+		num[j] = t;
+	}
+
+	private int constructNum(int[] n){
+		int sum = 0;
+		for (int x : n) {
+			sum = sum * 10 + x;
+		}
+		return sum;
+	}
+
+	private boolean isPowOf2(int x){
+		int left = 0;
+		int right = 30;
+		while (left <= right){
+			int mid = left + (right - left) / 2;
+			int cal = (int)Math.pow(2, mid);
+			if (x == cal) {
+				return true;
+			} else if (x < cal){
+				right = mid - 1;
+			} else {
+				left = mid + 1;
+			}
+		}
+		return false;
+	}
+}
