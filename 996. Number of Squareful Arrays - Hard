@@ -1,22 +1,23 @@
 
 /*
+*** 996
 Given an array A of non-negative integers, the array is squareful if for every pair of adjacent elements, their sum is a perfect square.
 
 Return the number of permutations of A that are squareful.  Two permutations A1 and A2 differ if and only if there is some index i such that A1[i] != A2[i].
 
- 
+
 
 Example 1:
 
 Input: [1,17,8]
 Output: 2
-Explanation: 
+Explanation:
 [1,8,17] and [17,8,1] are the valid permutations.
 Example 2:
 
 Input: [2,2,2]
 Output: 1
- 
+
 
 Note:
 
@@ -51,6 +52,19 @@ public class NumSquareful {
 
 		int res = 0;
 		for (int i = cur; i < A.length; i++) {
+			/**
+			 * Compare the ith number with the previous number (cur - 1)
+			 * 	Case 0: not perfect square
+			 * 		i++
+			 * 	Case 1: is perfect square
+			 * 		cur++
+			 *
+			 * Deduplication
+			 *  Case 2: any number between cur and i - 1 has the same value
+			 *  	i++
+			 *  Case 3: numbers between cur and i - 1 are all different
+			 *    cur++
+			 */
 			if ((cur == 0 || isPerfectSquare(A[i] + A[cur - 1])) &&
 				  !repeated(A, i, cur)) {
 				swap(A, cur, i);
