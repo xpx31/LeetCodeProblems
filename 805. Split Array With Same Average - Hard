@@ -1,0 +1,99 @@
+
+/*
+In a given integer array A, we must move every element of A to either list B or list C. (B and C initially start empty.)
+
+Return true if and only if after such a move, it is possible that the average value of B is equal to the average value of C, and B and C are both non-empty.
+
+Example :
+Input:
+[1,2,3,4,5,6,7,8]
+Output: true
+Explanation: We can split the array into [1,4,5,8] and [2,3,6,7], and both of them have the average of 4.5.
+Note:
+
+The length of A will be in the range [1, 30].
+A[i] will be in the range of [0, 10000].
+ */
+public class SameAvg {
+	/**
+	 * Find the total sum of the input array A
+	 * from 1 to N / 2:
+	 *   find the the sum of the numbers is the 1 to N/2 times of the total sum of the input array
+	 *
+	 * Time: O(n*n!)
+	 * Space: O(n)
+	 */
+	public boolean splitArraySameAverage(int[] A) {
+		if (A == null) {
+			return false;
+		}
+		Arrays.sort(A);
+
+		int sum = 0;
+		for (int x : A){
+			sum += x;
+		}
+
+		int n = A.length;
+		for (int k = 1; k <= n / 2; k++){
+			int kSum = sum * k;
+			if (kSum % n == 0){
+				if (findSameAvg(A, kSum / n, k, 0)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean findSameAvg(int[] A, int target, int k, int i) {
+		int max = A[A.length - 1];
+		// Min and Max cases
+		if (A[i] * k > target || max * k < target) {
+			return false;
+		}
+		// 2 sum
+		if (k == 2) {
+			int left = i;
+			int right = A.length - 1;
+			while (left < right) {
+				if (A[left] + A[right] == target){
+					return true;
+				} else if (target < A[left] + A[right]){
+					right--;
+				} else {
+					left++;
+				}
+			}
+		} else {
+			// k sum
+			for (int x = i; x < A.length - k + 1; x++){
+				// Skip duplication
+				if (x > i && A[x] == A[x - 1]){
+					continue;
+				}
+				// Max case - find the smallest num to start exploring
+				if (A[x] + max * (k - 1) < target) {
+					continue;
+				}
+				// Min case
+				if (A[x] * k > target){
+					break;
+				}
+				// Have k same values
+				if (A[x] * k == target){
+					if (A[x] == A[x + k - 1]){
+						return true;
+					}
+				}
+
+				if (findSameAvg(A, target - A[x], k - 1, x + 1)){
+					return true;
+				}
+			}
+		}
+
+
+		return false;
+	}
+}
