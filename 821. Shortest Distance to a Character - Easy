@@ -1,0 +1,101 @@
+
+/**
+ * Given a string S and a character C, return an array of integers representing the shortest distance from the character C in the string.
+ *
+ * Example 1:
+ *
+ * Input: S = "loveleetcode", C = 'e'
+ * Output: [3, 2, 1, 0, 1, 0, 0, 1, 2, 2, 1, 0]
+ *
+ *
+ * Note:
+ *
+ * S string length is in [1, 10000].
+ * C is a single character, and guaranteed to be in string S.
+ * All letters in S and C are lowercase.
+ * 
+ * 
+ */
+public class ShortestDistance {
+	/**
+	 * Use an array to store all the locations of c in S in forward order,
+	 * Scan through the each character and repeat the same steps in backward order,
+	 * record the min. of the two distances
+	 *
+	 * Time: O(n)
+	 * Space: O(n), n = S.length()
+	 */
+	public int[] shortestToChar(String S, char C) {
+		int[] res = new int[S.length()];
+		if (S == null || C == 0) {
+			return res;
+		}
+
+		// Store all locations of c in S in forward order
+		int prev = Integer.MIN_VALUE / 2;
+		for (int i = 0; i < S.length(); i++){
+			if (S.charAt(i) == C) {
+				prev = i;
+			}
+			res[i] = i - prev;
+		}
+
+		// Find all locations of c in S in backward order
+		// and determine the min distance b/t the two
+		prev = Integer.MAX_VALUE / 2;
+		for (int i = S.length() - 1; i >= 0; i--){
+			if (S.charAt(i) == C){
+				prev = i;
+			}
+			res[i] = Math.min(res[i], prev - i);
+		}
+
+		return res;
+	}
+
+	/**
+	 * Use an array to store all the locations of c in S,
+	 * scan each character in S again to determine the closest distance of the character to the nearby c.
+	 *
+	 * Time: O(n)
+	 * Space: O(n), n = S.length()
+	 */
+	public int[] shortestToCharII(String S, char C) {
+		int[] res = new int[S.length()];
+		if (S == null || C == 0) {
+			return res;
+		}
+
+		// Store all locations of c in S
+		List<Integer> pc = new ArrayList<>();
+		for (int i = 0; i < S.length(); i++){
+			if (S.charAt(i) == C) {
+				pc.add(i);
+			}
+		}
+
+		int j = 0;
+		for (int i = 0; i < S.length(); i++){
+			int pos = 0;
+			// Iterate j
+			if (0 <= j && j < pc.size() - 1 && pc.get(j) - i < 0){
+				j++;
+			}
+
+			// Get the nearest position
+			if (j <= 0 && pc.get(j) - i >= 0){
+				pos = pc.get(j) - i;
+			} else if (j >= pc.size() - 1 && i - pc.get(j) >= 0){
+				pos = i - pc.get(j);
+			} else {
+				int pos1 = i - pc.get(j - 1);
+				int pos2 = pc.get(j) - i;
+				pos = Math.min(pos1, pos2);
+			}
+
+			res[i] = pos;
+		}
+
+		return res;
+	}
+}
