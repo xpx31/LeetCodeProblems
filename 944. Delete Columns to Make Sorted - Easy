@@ -37,7 +37,7 @@ Note:
 1 <= A[i].length <= 1000
  */
 public class DeleteColumns {
-	/**
+		/**
 	 * Examine coloumn by coloumn that if the order is non-decreasing
 	 *
 	 * Time: O(n*length(str))
@@ -50,23 +50,12 @@ public class DeleteColumns {
 
 		int ctn = 0;
 		int size = A[0].length();
-		if (size == 1){
-			for (int c = 1; c < size; c++){
-				if (A[c].charAt(0) - A[c].charAt(0) < 0){
-					ctn++;
-					break;
-				}
-			}
-		}
-
 		for (int col = 0; col < size; col++){
-			int row = 1;
-			while (row < A.length) {
+			for(int row = 1; row < A.length; row++){
 				if (A[row].charAt(col) - A[row - 1].charAt(col) < 0) {
 					ctn++;
 					break;
 				}
-				row++;
 			}
 		}
 		return ctn;
