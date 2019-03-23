@@ -63,4 +63,28 @@ public class TeemoAttack {
 		}
 		return sum;
 	}
+	
+	
+	/**
+	 * Scan the time series and determine if the poision effect has terminated,
+	 * Get the duraion of poisioned from the end and begining of the effect, and add all the times.
+	 *
+	 * Time: O(n)
+	 * Space: O(1)
+	 */
+	public int findPoisonedDurationII(int[] timeSeries, int duration) {
+		if (timeSeries == null || timeSeries.length <= 0){
+			return 0;
+		}
+
+		int start = timeSeries[0];
+		int end = 0;
+		int sum = 0;
+		for (int t : timeSeries){
+			sum += t >= end ? duration : t - start;
+			start = t;
+			end = start + duration;
+		}
+		return sum;
+	}
 }
