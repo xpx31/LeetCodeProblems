@@ -1,0 +1,60 @@
+
+/*
+Write a program to find the n-th ugly number.
+
+Ugly numbers are positive numbers whose prime factors only include 2, 3, 5.
+
+Example:
+
+Input: n = 10
+Output: 12
+Explanation: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 is the sequence of the first 10 ugly numbers.
+Note:
+
+1 is typically treated as an ugly number.
+n does not exceed 1690.
+ */
+public class UglyNumber {
+	/**
+	 * Use an array to store all ugly numbers,
+	 * another to store all base multipliers for each prime number,
+	 * another to store all product of each base multipliers and prime numbers
+	 *
+	 * Time: O(np)
+	 * Space: O(p)
+	 */
+	public int nthUglyNumber(int n) {
+		if (n <= 0) {
+			return 0;
+		}
+
+		int[] primes = {2, 3, 5};
+		// All ugly numbers
+		int[] ugly = new int[n];
+		// All base multipliers for each prime number
+		int[] base = new int[primes.length];
+		// All product values of each base and prime number
+		int[] value = new int[primes.length];
+		Arrays.fill(value, 1);
+
+		int next = 1;
+		for (int i = 0; i < n; i++){
+			ugly[i] = next;
+
+			// Determine next number
+			next = Integer.MAX_VALUE;
+			for (int j = 0; j < value.length; j++){
+				if (value[j] == ugly[i]){
+					// Update base multiplier for that prime number
+					// for which no other numbers will be smaller than it
+					value[j] = ugly[base[j]++] * primes[j];
+				}
+
+				// Find the min among all values
+				next = Math.min(next, value[j]);
+			}
+		}
+
+		return ugly[n - 1];
+	}
+}
