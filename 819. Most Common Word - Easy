@@ -1,0 +1,80 @@
+
+/*
+Given a paragraph and a list of banned words, return the most frequent word that is not in the list of banned words.  It is guaranteed there is at least one word that isn't banned, and that the answer is unique.
+
+Words in the list of banned words are given in lowercase, and free of punctuation.  Words in the paragraph are not case sensitive.  The answer is in lowercase.
+
+ 
+
+Example:
+
+Input: 
+paragraph = "Bob hit a ball, the hit BALL flew far after it was hit."
+banned = ["hit"]
+Output: "ball"
+Explanation: 
+"hit" occurs 3 times, but it is a banned word.
+"ball" occurs twice (and no other word does), so it is the most frequent non-banned word in the paragraph. 
+Note that words in the paragraph are not case sensitive,
+that punctuation is ignored (even if adjacent to words, such as "ball,"), 
+and that "hit" isn't the answer even though it occurs more because it is banned.
+ 
+
+Note:
+
+1 <= paragraph.length <= 1000.
+1 <= banned.length <= 100.
+1 <= banned[i].length <= 10.
+The answer is unique, and written in lowercase (even if its occurrences in paragraph may have uppercase symbols, and even if it is a proper noun.)
+paragraph only consists of letters, spaces, or the punctuation symbols !?',;.
+There are no hyphens or hyphenated words.
+Words only consist of letters, never apostrophes or other punctuation symbols.
+ */
+public class MostFreqWord {
+	/**
+	 * Use one hashmap to store all words and a hashset to store all banned words
+	 *
+	 * Time: O(p + b)
+	 * Space: O(p + b)
+	 */
+	public String mostCommonWord(String paragraph, String[] banned) {
+		String res = "";
+		if (paragraph == null || paragraph.length() <= 0) {
+			return res;
+		}
+
+		// Add banned words
+		Set<String> bannedWords = new HashSet<>();
+		if (banned != null){
+			for (String b : banned){
+				bannedWords.add(b);
+			}
+		}
+
+		// Exmaine the frequency of all words
+		Map<String, Integer> words = new HashMap<>();
+		for (int i = 0; i < paragraph.length(); i++){
+			StringBuilder sb = new StringBuilder();
+			for (int j = i; j < paragraph.length(); j++){
+				// Get word
+				char c = paragraph.charAt(j);
+				if (Character.isLowerCase(c) || Character.isUpperCase(c)){
+					sb.append(Character.toLowerCase(c));
+				} else {
+					i = j;
+					break;
+				}
+			}
+			// Determine the frequency of the word
+			String word = sb.toString();
+			// Determine if the word is banned
+			if (!word.equals("") && (bannedWords.size() == 0 || !bannedWords.contains(word))){
+				int freq = words.getOrDefault(word, 0) + 1;
+				words.put(word, freq);
+				res = freq > words.getOrDefault(res, 0) ? word : res;
+			}
+		}
+
+		return res;
+	}
+}
