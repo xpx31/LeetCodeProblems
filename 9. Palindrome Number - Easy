@@ -1,0 +1,82 @@
+
+/**
+ * Determine whether an integer is a palindrome. An integer is a palindrome when it reads the same backward as forward.
+ *
+ * Example 1:
+ *
+ * Input: 121
+ * Output: true
+ * Example 2:
+ *
+ * Input: -121
+ * Output: false
+ * Explanation: From left to right, it reads -121. From right to left, it becomes 121-. Therefore it is not a palindrome.
+ * Example 3:
+ *
+ * Input: 10
+ * Output: false
+ * Explanation: Reads 01 from right to left. Therefore it is not a palindrome.
+ * Follow up:
+ *
+ * Coud you solve it without converting the integer to a string?
+ */
+public class IsPalindromeNum {
+	/**
+	 * Reverse half of the digits
+	 *
+	 * Time: O(log_10 n)
+	 * Space: O(1)
+	 */
+	public boolean isPalindrome(int x) {
+		if (x < 0 || (x % 10 == 0 && x != 0)) {
+			return false;
+		}
+
+		int rev = 0;
+		while (x > rev) {
+			rev = rev * 10 + (x % 10);
+			x /= 10;
+		}
+
+		return x == rev || x == rev / 10;
+	}
+
+
+	/**
+	 * Use a stack to store all the digits
+	 * and another to store half of them
+	 * compare the two stacks
+	 *
+	 * Time: O(log_10 n)
+	 * Space: O(log_10 n)
+	 */
+	public boolean isPalindromeII(int x) {
+		if (x < 0) {
+			return false;
+		}
+		Deque<Integer> stack1 = new ArrayDeque<>();
+		Deque<Integer> stack2 = new ArrayDeque<>();
+		int cnt = 0;
+		while (x != 0) {
+			stack1.push(x % 10);
+			x /= 10;
+			cnt++;
+		}
+
+		for (int i = 0; i < cnt / 2; i++){
+			stack2.push(stack1.pop());
+		}
+
+		if (cnt % 2 == 1 && !stack1.isEmpty()) {
+			stack1.pop();
+		}
+
+		while (!stack1.isEmpty() && !stack2.isEmpty()){
+			if (stack1.pop() != stack2.pop()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+}
