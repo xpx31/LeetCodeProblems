@@ -1,0 +1,65 @@
+
+/**
+ * You are given a list of non-negative integers, a1, a2, ..., an, and a target, S. Now you have 2 symbols + and -. For each integer, you should choose one from + and - as its new symbol.
+ *
+ * Find out how many ways to assign symbols to make sum of integers equal to target S.
+ *
+ * Example 1:
+ * Input: nums is [1, 1, 1, 1, 1], S is 3.
+ * Output: 5
+ * Explanation:
+ *
+ * -1+1+1+1+1 = 3
+ * +1-1+1+1+1 = 3
+ * +1+1-1+1+1 = 3
+ * +1+1+1-1+1 = 3
+ * +1+1+1+1-1 = 3
+ *
+ * There are 5 ways to assign symbols to make the sum of nums be target 3.
+ * Note:
+ * The length of the given array is positive and will not exceed 20.
+ * The sum of elements in the given array will not exceed 1000.
+ * Your output answer is guaranteed to be fitted in a 32-bit integer.
+ *
+ */
+public class TargetSum {
+	/**
+	 * Use an int array with 2 * sum + 1 values to store all the sums
+	 * from -sum to i
+	 *
+	 * Time: O(n^2)
+	 * Space: O(n)
+	 */
+	public int findTargetSumWays(int[] nums, int S) {
+		if (nums == null) {
+			return 0;
+		}
+
+		int sum = 0;
+		for (int x : nums) {
+			sum += x;
+		}
+
+		if (S > sum || S < -sum) {
+			return 0;
+		}
+
+		int[] res = new int[sum * 2 + 1];
+		res[sum] = 1;
+
+		// Get all possible sum with any element in nums
+		for (int i = 0; i < nums.length; i++){
+			int[] temp = new int[sum * 2 + 1];
+			// Update the sum
+			for (int j = 0; j < temp.length; j++){
+				if (res[j] != 0){
+					temp[j + nums[i]] += res[j];
+					temp[j - nums[i]] += res[j];
+				}
+			}
+			res = temp;
+		}
+
+		return res[sum + S];
+	}
+}
