@@ -24,13 +24,50 @@ Explanation: There are three ways to climb to the top.
  */
 public class ClimbingStaires {
 	/**
+	 * Use two variables to store previous two steps to reach at position i
+	 * Each position can be reached from previous step or the one before the previous step
+	 *
+	 * Time: O(n)
+	 * Space: O(1)
+	 */
+	public int climbStairs(int n) {
+		if (n < 0) {
+			return 0;
+		} else if (n == 1){
+			return 1;
+		}
+
+		int step1 = 1;
+		int step2 = 2;
+		for (int i = 3; i <= n; i++){
+			int step3 = step1 + step2;
+			step1 = step2;
+			step2 = step3;
+		}
+
+		return step2;
+	}
+
+	/**
+	 * Use nth fibonacci number formula
+	 *
+	 * Time: O(log_10 n)
+	 * Space: O(1)
+	 */
+	public int climbStairsII(int n) {
+		double sqrt5=Math.sqrt(5);
+		double fibn=Math.pow((1+sqrt5)/2,n+1)-Math.pow((1-sqrt5)/2,n+1);
+		return (int)(fibn/sqrt5);
+	}
+
+	/**
 	 * Use an array to store all steps to reach at position i
 	 * Each position can be reached from previous step or the one before the previous step
 	 *
 	 * Time: O(n)
 	 * Space: O(n)
 	 */
-	public int climbStairs(int n) {
+	public int climbStairsIII(int n) {
 		if (n < 0) {
 			return 0;
 		}
